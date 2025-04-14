@@ -37,6 +37,7 @@ class Game {
       this.addRandomTile(this.board);
     }
     this.updateStatus();
+    this.updateView();
   }
 
   moveRight() {
@@ -69,6 +70,7 @@ class Game {
       this.addRandomTile(this.board);
     }
     this.updateStatus();
+    this.updateView();
   }
 
   moveUp() {
@@ -108,6 +110,7 @@ class Game {
       this.addRandomTile(this.board);
     }
     this.updateStatus();
+    this.updateView();
   }
 
   moveDown() {
@@ -149,6 +152,7 @@ class Game {
       this.addRandomTile(this.board);
     }
     this.updateStatus();
+    this.updateView();
 
     return moved;
   }
@@ -175,6 +179,7 @@ class Game {
 
         if (current === 0) {
           hasEmpty = true;
+          continue;
         }
 
         if (col < 3 && current === this.board[row][col + 1]) {
@@ -191,16 +196,20 @@ class Game {
       return 'playing';
     }
 
-    return hasValidMove ? 'playing' : 'lose';
+    if (hasValidMove) {
+      return 'playing';
+    }
+
+    return 'lose';
   }
 
   updateStatus() {
     this.status = this.getStatus();
 
     if (this.status === 'win') {
-      document.getElementById('.message-win').classList.remove('.hidden');
+      document.querySelector('.message-win').classList.remove('hidden');
     } else if (this.status === 'lose') {
-      document.getElementById('.message-lose').classList.remove('.hidden');
+      document.querySelector('.message-lose').classList.remove('hidden');
     }
   }
 
@@ -209,6 +218,11 @@ class Game {
     this.score = 0;
     this.addRandomTile(this.board);
     this.addRandomTile(this.board);
+
+    this.updateView();
+
+    document.querySelector('.message-win').classList.add('hidden');
+    document.querySelector('.message-lose').classList.add('hidden');
   }
 
   restart() {
@@ -216,6 +230,10 @@ class Game {
     this.score = 0;
     this.addRandomTile(this.board);
     this.addRandomTile(this.board);
+    this.updateView();
+
+    document.querySelector('.message-win').classList.add('hidden');
+    document.querySelector('.message-lose').classList.add('hidden');
   }
 
   fillBoard() {
@@ -249,6 +267,29 @@ class Game {
 
       board[randomCell.row][randomCell.col] = this.getRandomTileValue();
     }
+  }
+
+  updateView() {
+    for (let row = 0; row < 4; row++) {
+      for (let col = 0; col < 4; col++) {
+        const cell = document.querySelector(
+          `.field-row:nth-child(${row + 1}) .field-cell:nth-child(${col + 1})`,
+        );
+        const value = this.board[row][col];
+
+        cell.className = 'field-cell';
+
+        cell.classList.add('field-cell');
+
+        if (value > 0) {
+          cell.classList.add(`field-cell--${value}`);
+          cell.textContent = value;
+        } else {
+          cell.textContent = '';
+        }
+      }
+    }
+    document.getElementById('game-score').textContent = this.score;
   }
 }
 
