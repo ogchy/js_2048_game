@@ -23,6 +23,7 @@ body {
   transition:
     transform 0.2s ease,
     background-color 0.2s ease;
+  animation: appear 0.2s ease;
 
   &--2 {
     background: #eee4da;
@@ -91,7 +92,6 @@ body {
   padding: 10px;
   box-sizing: border-box;
   gap: 15px;
-
 }
 
 h1 {
@@ -121,13 +121,11 @@ h1 {
   box-sizing: border-box;
   font-size: 16px;
   margin: 0;
-
 }
 
 .controls {
   display: flex;
   gap: 10px;
-
 }
 
 .button {

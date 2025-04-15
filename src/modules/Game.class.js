@@ -4,7 +4,13 @@ class Game {
   constructor() {
     this.board = this.fillBoard();
     this.score = 0;
-    this.status = 'idle';
+    this.status = 'playing';
+
+    this.updateStatus();
+    this.updateView();
+
+    document.querySelector('.message-win').classList.add('hidden');
+    document.querySelector('.message-lose').classList.add('hidden');
   }
 
   moveLeft() {
@@ -206,11 +212,30 @@ class Game {
   updateStatus() {
     this.status = this.getStatus();
 
-    if (this.status === 'win') {
-      document.querySelector('.message-win').classList.remove('hidden');
-    } else if (this.status === 'lose') {
-      document.querySelector('.message-lose').classList.remove('hidden');
-    }
+    document
+      .querySelector('.message-win')
+      .classList.toggle('hidden', this.status !== 'win');
+
+    document
+      .querySelector('.message-lose')
+      .classList.toggle('hidden', this.status !== 'lose');
+
+    const gameStarted =
+      this.score > 0 || this.board.some((row) => row.some((cell) => cell > 0));
+
+    document
+      .getElementById('start-button')
+      .classList.toggle('hidden', gameStarted);
+
+    document
+      .getElementById('restart-button')
+      .classList.toggle('hidden', !gameStarted);
+  }
+
+  hideAllMessages() {
+    document.querySelector('.message-win').classList.add('hidden');
+    document.querySelector('.message-lose').classList.add('hidden');
+    document.querySelector('.message-start').classList.add('hidden');
   }
 
   start() {
@@ -218,22 +243,13 @@ class Game {
     this.score = 0;
     this.addRandomTile(this.board);
     this.addRandomTile(this.board);
-
+    this.updateStatus();
     this.updateView();
-
-    document.querySelector('.message-win').classList.add('hidden');
-    document.querySelector('.message-lose').classList.add('hidden');
+    document.querySelector('.message-start').classList.add('hidden');
   }
 
   restart() {
-    this.board = this.fillBoard();
-    this.score = 0;
-    this.addRandomTile(this.board);
-    this.addRandomTile(this.board);
-    this.updateView();
-
-    document.querySelector('.message-win').classList.add('hidden');
-    document.querySelector('.message-lose').classList.add('hidden');
+    this.start();
   }
 
   fillBoard() {
